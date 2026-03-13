@@ -1,0 +1,32 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @media (prefers-color-scheme: light) {
+      .bg { fill: #0b1021; }
+      .window { fill: #111827; }
+      .window-border { stroke: #334155; }
+      .prompt { fill: #22d3ee; }
+      .code { fill: #93c5fd; }
+      .cursor { fill: #34d399; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #e2e8f0; }
+      .window { fill: #f8fafc; }
+      .window-border { stroke: #94a3b8; }
+      .prompt { fill: #0369a1; }
+      .code { fill: #1d4ed8; }
+      .cursor { fill: #059669; }
+    }
+  </style>
+
+  <rect class="bg" width="180" height="180" rx="36" />
+  <rect class="window" x="28" y="36" width="124" height="108" rx="18" />
+  <rect class="window-border" x="28.75" y="36.75" width="122.5" height="106.5" rx="17.25" stroke-width="1.5" />
+
+  <circle class="prompt" cx="44" cy="52" r="3.5" />
+  <circle class="prompt" cx="56" cy="52" r="3.5" opacity="0.75" />
+  <circle class="prompt" cx="68" cy="52" r="3.5" opacity="0.5" />
+
+  <path class="code" d="M59.8 84.6L74.1 98.9L59.8 113.2L54 107.4L62.5 98.9L54 90.4L59.8 84.6Z" />
+  <path class="code" d="M120.2 84.6L105.9 98.9L120.2 113.2L126 107.4L117.5 98.9L126 90.4L120.2 84.6Z" />
+  <rect class="cursor" x="82" y="94" width="16" height="9" rx="2" />
+</svg>
