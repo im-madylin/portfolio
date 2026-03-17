@@ -73,7 +73,8 @@ export function ProjectModal({ project, open, onOpenChange }: ProjectModalProps)
   }
 
   const isCurrentImageFailed = failedImageIndexes.includes(currentImageIndex)
-  const fallbackEmoji = project.id === "1" ? "📡" : project.id === "2" ? "🗂️" : "📍"
+  const fallbackEmoji =
+    project.id === "1" ? "📡" : project.id === "2" ? "🗂️" : project.id === "3" ? "📍" : "🧩"
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -138,6 +139,11 @@ export function ProjectModal({ project, open, onOpenChange }: ProjectModalProps)
 
           <div className="p-6 space-y-6">
             <DialogHeader>
+              <div>
+                <Badge variant="outline" className="rounded-full">
+                  {project.category}
+                </Badge>
+              </div>
               <DialogTitle className="text-2xl text-foreground">
                 {project.title}
               </DialogTitle>

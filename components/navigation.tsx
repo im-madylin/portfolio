@@ -13,7 +13,7 @@ const navItems = [
   { label: "교육", href: "#education" },
   { label: "자격증", href: "#certificates" },
   { label: "프로젝트", href: "#projects" },
-  { label: "연락처", href: "#contact" },
+  { label: "연락하기", href: "#contact" },
 ];
 
 export function Navigation() {

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { skills } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -21,7 +22,15 @@ export function SkillsSection() {
               <Card className="border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-md">
                 <CardContent className="p-5 space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{skill.icon}</span>
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-card shadow-sm ring-1 ring-border/60">
+                      <Image
+                        src={skill.icon}
+                        alt={`${skill.name} 아이콘`}
+                        width={20}
+                        height={20}
+                        className={skill.name === "Next.js" ? "dark:invert" : undefined}
+                      />
+                    </div>
                     <span className="font-medium text-foreground">{skill.name}</span>
                   </div>
 

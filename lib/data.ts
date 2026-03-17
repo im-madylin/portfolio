@@ -1,7 +1,9 @@
 export interface Project {
   id: string;
+  category: "실무" | "사이드";
   title: string;
   description: string;
+  sortDate: string;
   thumbnail: string;
   images?: string[];
   techStack: string[];
@@ -61,46 +63,46 @@ export const profileData = {
 export const skills: Skill[] = [
   {
     name: "React",
-    icon: "⚛️",
+    icon: "/skills/react.svg",
     context: "사내 서비스 화면 개발과 개인 프로젝트 UI 구현에 활용했습니다.",
     keywords: ["컴포넌트 분리", "상태 기반 UI", "재사용 구조"],
   },
   {
     name: "TypeScript",
-    icon: "📘",
+    icon: "/skills/typescript.svg",
     context: "프론트엔드 코드의 안정성과 유지보수성을 높이는 데 사용했습니다.",
     keywords: ["타입 모델링", "API 타입 관리", "리팩터링 안정성"],
   },
   {
     name: "Next.js",
-    icon: "▲",
+    icon: "/skills/nextdotjs.svg",
     context:
       "포트폴리오와 서비스 화면의 페이지 구성 및 빌드 최적화에 활용했습니다.",
     keywords: ["App Router", "SSR/SSG", "SEO 기본 설정"],
   },
   {
     name: "JavaScript",
-    icon: "🟨",
+    icon: "/skills/javascript.svg",
     context: "운영 기능 개선과 인터랙션 구현을 위한 기본 언어로 활용했습니다.",
     keywords: ["DOM 제어", "비동기 처리", "이벤트 핸들링"],
   },
   {
     name: "HTML/CSS",
-    icon: "🎨",
+    icon: "/skills/html5.svg",
     context:
       "사용자 흐름을 고려한 화면 구조와 반응형 레이아웃 구현에 사용했습니다.",
     keywords: ["시맨틱 마크업", "반응형 레이아웃", "접근성 고려"],
   },
   {
     name: "Tailwind CSS",
-    icon: "💨",
+    icon: "/skills/tailwindcss.svg",
     context:
       "디자인 시스템 기반으로 빠르게 UI를 구성하고 유지보수에 활용했습니다.",
     keywords: ["유틸리티 클래스", "컴포넌트 스타일링", "테마 적용"],
   },
   {
     name: "Git",
-    icon: "📦",
+    icon: "/skills/git.svg",
     context:
       "협업 과정에서 버전 관리와 변경 이력 추적에 지속적으로 사용했습니다.",
     keywords: ["브랜치 전략", "PR 리뷰", "변경 이력 관리"],
@@ -181,8 +183,10 @@ export const certificates: Certificate[] = [
 export const projects: Project[] = [
   {
     id: "1",
+    category: "실무",
     title: "APEC 실시간 관제 웹 서비스 개발",
     description: "실시간 데이터 관제와 UX 개선에 집중한 APEC 관제 웹 서비스",
+    sortDate: "2025-10-01",
     thumbnail: "/projects/ecommerce.jpg",
     images: [
       "/placeholder.jpg",
@@ -220,8 +224,10 @@ export const projects: Project[] = [
   },
   {
     id: "2",
+    category: "실무",
     title: "APEC 백오피스 웹서비스 개발",
     description: "권한 기반 운영 업무를 지원하는 APEC 관리자 백오피스",
+    sortDate: "2025-10-01",
     thumbnail: "/projects/chat.jpg",
     images: ["/placeholder-user.jpg", "/placeholder.jpg"],
     techStack: ["React", "TypeScript", "Ant Design", "Zustand", "React Query"],
@@ -247,8 +253,10 @@ export const projects: Project[] = [
   },
   {
     id: "3",
+    category: "실무",
     title: "위치정보관리 백오피스 웹 서비스 개발",
     description: "위치정보 사업자 운영을 위한 관리자 백오피스",
+    sortDate: "2025-02-01",
     thumbnail: "/projects/portfolio.jpg",
     images: [
       "/placeholder-logo.svg",
@@ -273,6 +281,41 @@ export const projects: Project[] = [
       learnings: [
         "요구사항 정의서, 기능 정의서, 와이어프레임 등 기획 산출물을 작성하며 문제를 구조화하는 역량을 키웠습니다.",
         "사용자 매뉴얼 문서화가 운영 문의 감소와 인수인계 효율 개선에 직접 기여함을 경험했습니다.",
+      ],
+    },
+  },
+  {
+    id: "4",
+    category: "사이드",
+    title: "개인 포트폴리오 웹사이트 구축",
+    description: "OpenCode를 활용해 설계부터 구현/검증까지 진행한 개인 포트폴리오",
+    sortDate: "2026-03-01",
+    thumbnail: "/placeholder-logo.png",
+    images: ["/placeholder-logo.png", "/placeholder.jpg", "/placeholder-user.jpg"],
+    techStack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "OpenCode",
+    ],
+    period: "2026.03",
+    details: {
+      role: "기획 · 프론트엔드 개발",
+      teamSize: "1인 개발",
+      features: [
+        "소개/기술/경력/프로젝트/자격증 섹션으로 구성된 원페이지 포트폴리오 구현",
+        "프로젝트 상세 모달, 스크롤 애니메이션, 라이트/다크 테마 전환 기능 적용",
+        "Paperlogy 폰트를 로컬 폰트로 적용해 통일된 타이포그래피 구성",
+        "OpenCode 기반 작업 흐름으로 구현 후 빌드 검증까지 반복 수행",
+      ],
+      challenges: [
+        "정적 데이터 구조를 유지하면서 섹션별 표현 정보와 확장성을 함께 고려한 타입 설계",
+        "애니메이션, 접근성, 반응형 레이아웃 사이의 균형을 맞추기 위한 UI 조정",
+      ],
+      learnings: [
+        "AI 코딩 도구를 사용할 때도 요구사항 분해, 코드 리뷰, 검증 루틴이 품질을 좌우한다는 점을 체감했습니다.",
+        "포트폴리오 자체를 하나의 제품처럼 다루며 정보 구조와 사용자 흐름 설계 역량을 강화했습니다.",
       ],
     },
   },

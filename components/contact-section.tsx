@@ -1,49 +1,81 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import emailjs from "@emailjs/browser";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollAnimation } from "./scroll-animation";
-import { Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 
-interface ContactFormData {
-  name: string;
-  company: string;
-  phone: string;
-  email: string;
-  message: string;
-}
+const contactSchema = z.object({
+  name: z.string().min(1, "이름을 입력해주세요."),
+  company: z.string().min(1, "상호/회사명을 입력해주세요."),
+  phone: z
+    .string()
+    .min(1, "연락처를 입력해주세요.")
+    .regex(
+      /^\d{2,3}-\d{3,4}-\d{4}$/,
+      "올바른 연락처 형식을 입력해주세요. (예: 010-1234-5678)",
+    ),
+  email: z
+    .string()
+    .min(1, "이메일을 입력해주세요.")
+    .email("올바른 이메일 형식이 아닙니다."),
+  message: z.string().min(1, "내용을 입력해주세요."),
+});
 
-const initialFormData: ContactFormData = {
-  name: "",
-  company: "",
-  phone: "",
-  email: "",
-  message: "",
-};
+type ContactFormData = z.infer<typeof contactSchema>;
 
 export function ContactSection() {
-  const [formData, setFormData] = useState<ContactFormData>(initialFormData);
-  const [submitMessage, setSubmitMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      company: "",
+      phone: "",
+      email: "",
+      message: "",
+    },
+  });
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSubmitMessage(
-      "문의 폼 인터페이스만 먼저 구현했습니다. 메일 연동은 추후 진행 예정입니다.",
-    );
+  const onSubmit = async (data: ContactFormData) => {
+    setIsSubmitting(true);
+
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          name: data.name,
+          company: data.company,
+          phone: data.phone,
+          email: data.email,
+          message: data.message,
+        },
+        { publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! },
+      );
+
+      toast.success("문의가 성공적으로 전송되었습니다.");
+      reset();
+    } catch {
+      toast.error("전송에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -63,29 +95,35 @@ export function ContactSection() {
         <ScrollAnimation animation="fade-up" delay={100}>
           <Card className="border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-md">
             <CardContent>
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">이름</Label>
                     <Input
                       id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
                       placeholder="홍길동"
-                      required
+                      aria-invalid={!!errors.name}
+                      {...register("name")}
                     />
+                    {errors.name && (
+                      <p className="text-sm text-destructive">
+                        {errors.name.message}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="company">상호/회사명</Label>
                     <Input
                       id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleInputChange}
                       placeholder="회사명"
-                      required
+                      aria-invalid={!!errors.company}
+                      {...register("company")}
                     />
+                    {errors.company && (
+                      <p className="text-sm text-destructive">
+                        {errors.company.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -94,24 +132,30 @@ export function ContactSection() {
                     <Label htmlFor="phone">연락처</Label>
                     <Input
                       id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
                       placeholder="010-1234-5678"
-                      required
+                      aria-invalid={!!errors.phone}
+                      {...register("phone")}
                     />
+                    {errors.phone && (
+                      <p className="text-sm text-destructive">
+                        {errors.phone.message}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">이메일</Label>
                     <Input
                       id="email"
-                      name="email"
                       type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
                       placeholder="hello@example.com"
-                      required
+                      aria-invalid={!!errors.email}
+                      {...register("email")}
                     />
+                    {errors.email && (
+                      <p className="text-sm text-destructive">
+                        {errors.email.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -119,22 +163,29 @@ export function ContactSection() {
                   <Label htmlFor="message">내용</Label>
                   <Textarea
                     id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
                     placeholder="전달하실 내용을 남겨주세요."
                     className="min-h-36"
-                    required
+                    aria-invalid={!!errors.message}
+                    {...register("message")}
                   />
+                  {errors.message && (
+                    <p className="text-sm text-destructive">
+                      {errors.message.message}
+                    </p>
+                  )}
                 </div>
 
-                {submitMessage && (
-                  <p className="text-sm text-primary">{submitMessage}</p>
-                )}
-
-                <Button type="submit" className="rounded-full w-full sm:w-auto">
-                  <Send className="w-4 h-4 mr-2" />
-                  등록하기
+                <Button
+                  type="submit"
+                  className="rounded-full w-full sm:w-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4 mr-2" />
+                  )}
+                  {isSubmitting ? "전송 중..." : "등록하기"}
                 </Button>
               </form>
             </CardContent>
