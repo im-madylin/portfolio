@@ -13,7 +13,7 @@ export function ExperienceSection() {
         <ScrollAnimation animation="fade-up">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-2">경력</h2>
-            <p className="text-muted-foreground">실무에서 쌓은 경험입니다.</p>
+            <p className="text-muted-foreground">운영 서비스에서 문제를 해결하며 만든 실무 경험입니다.</p>
           </div>
         </ScrollAnimation>
 

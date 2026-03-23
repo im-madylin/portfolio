@@ -7,6 +7,7 @@ import { CertificatesSection } from "@/components/certificates-section"
 import { ProjectsSection } from "@/components/projects-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
+import { BackToTopButton } from "@/components/back-to-top-button"
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <ProjectsSection />
       <ContactSection />
       <Footer />
+      <BackToTopButton />
     </main>
   )
 }

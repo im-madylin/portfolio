@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import { Project } from "@/lib/data"
 import {
@@ -19,7 +19,7 @@ import {
   CheckCircle2,
   Lightbulb,
   Rocket,
-  Github,
+  GithubIcon,
   ExternalLink,
   ChevronLeft,
   ChevronRight,
@@ -42,11 +42,6 @@ export function ProjectModal({ project, open, onOpenChange }: ProjectModalProps)
       : []
 
   const hasMultipleImages = imageList.length > 1
-
-  useEffect(() => {
-    setCurrentImageIndex(0)
-    setFailedImageIndexes([])
-  }, [project?.id, open])
 
   if (!project) return null
 
@@ -86,7 +81,7 @@ export function ProjectModal({ project, open, onOpenChange }: ProjectModalProps)
                 src={imageList[currentImageIndex]}
                 alt={`${project.title} 이미지 ${currentImageIndex + 1}`}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="(max-width: 768px) 100vw, 896px"
                 onError={handleImageError}
               />
@@ -126,7 +121,7 @@ export function ProjectModal({ project, open, onOpenChange }: ProjectModalProps)
                       key={`dot-${index}`}
                       type="button"
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`h-2.5 w-2.5 rounded-full transition-all cursor-pointer ${
+                      className={`h-2.5 w-2.5 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 ${
                         currentImageIndex === index ? "bg-primary" : "bg-muted-foreground/40"
                       }`}
                       aria-label={`${index + 1}번 이미지로 이동`}
@@ -234,13 +229,13 @@ export function ProjectModal({ project, open, onOpenChange }: ProjectModalProps)
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Github className="w-4 h-4 mr-2" />
+                        <GithubIcon className="w-4 h-4 mr-2" />
                         GitHub
                       </a>
                     </Button>
                   )}
                   {project.details.links.live && (
-                    <Button asChild className="rounded-full">
+                    <Button asChild variant="outline" className="rounded-full">
                       <a
                         href={project.details.links.live}
                         target="_blank"

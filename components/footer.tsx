@@ -1,5 +1,4 @@
 import { profileData } from "@/lib/data";
-import { Heart } from "lucide-react";
 
 export function Footer() {
   return (

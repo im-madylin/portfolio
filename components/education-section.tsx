@@ -12,7 +12,7 @@ export function EducationSection() {
         <ScrollAnimation animation="fade-up">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-2">교육</h2>
-            <p className="text-muted-foreground">수료한 교육 과정입니다.</p>
+            <p className="text-muted-foreground">실무 역량의 기반이 된 학습 경험입니다.</p>
           </div>
         </ScrollAnimation>
         <div className="space-y-4">
@@ -42,7 +42,7 @@ export function EducationSection() {
                 </CardHeader>
                 {edu.description && (
                   <CardContent className="pt-0 pl-[4.5rem]">
-                    <p className="text-muted-foreground">{edu.description}</p>
+                    <p className="text-muted-foreground break-keep">{edu.description}</p>
                   </CardContent>
                 )}
               </Card>

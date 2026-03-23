@@ -29,7 +29,10 @@ export function ProjectsSection() {
         <ScrollAnimation animation="fade-up">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-2">프로젝트</h2>
-            <p className="text-muted-foreground">직접 진행한 프로젝트입니다.</p>
+            <p className="text-muted-foreground">실무와 사이드에서 문제를 정의하고 해결한 프로젝트입니다.</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              실무 프로젝트 이미지는 비식별 처리했습니다.
+            </p>
             <div className="mt-5 flex items-center justify-center gap-2">
               {(["전체", "실무", "사이드"] as const).map((filter) => (
                 <Button
@@ -59,6 +62,7 @@ export function ProjectsSection() {
       </div>
 
       <ProjectModal
+        key={`${selectedProject?.id ?? "none"}-${modalOpen ? "open" : "closed"}`}
         project={selectedProject}
         open={modalOpen}
         onOpenChange={setModalOpen}

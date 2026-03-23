@@ -6,6 +6,12 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollAnimation } from "./scroll-animation"
 
+const invertOnDarkIcons = new Set([
+  "/skills/nextdotjs.svg",
+  "/skills/antdesign.svg",
+  "/skills/gsap.svg",
+])
+
 export function SkillsSection() {
   return (
     <section id="skills" className="py-20">
@@ -28,7 +34,7 @@ export function SkillsSection() {
                         alt={`${skill.name} 아이콘`}
                         width={20}
                         height={20}
-                        className={skill.name === "Next.js" ? "dark:invert" : undefined}
+                        className={invertOnDarkIcons.has(skill.icon) ? "dark:invert" : undefined}
                       />
                     </div>
                     <span className="font-medium text-foreground">{skill.name}</span>

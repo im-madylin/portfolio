@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import Image from "next/image"
 import { Project } from "@/lib/data"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,14 +16,28 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onViewDetails }: ProjectCardProps) {
   const projectEmoji =
     project.id === "1" ? "📡" : project.id === "2" ? "🗂️" : project.id === "3" ? "📍" : "🧩"
+  const previewImage = project.images?.[0] ?? project.thumbnail
+  const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null)
+  const isImageFailed = !previewImage || failedImageSrc === previewImage
 
   return (
     <Card className="group h-full flex flex-col overflow-hidden border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
       <CardHeader className="p-0">
-        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20">
-          <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-50 group-hover:scale-110 transition-transform duration-500">
-            {projectEmoji}
-          </div>
+        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10">
+          {previewImage && !isImageFailed ? (
+            <Image
+              src={previewImage}
+              alt={`${project.title} 썸네일`}
+              fill
+              className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              onError={() => setFailedImageSrc(previewImage)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-50 group-hover:scale-110 transition-transform duration-500">
+              {projectEmoji}
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
         </div>
       </CardHeader>
@@ -63,6 +79,7 @@ export function ProjectCard({ project, onViewDetails }: ProjectCardProps) {
         <Button
           onClick={() => onViewDetails(project)}
           className="w-full rounded-full"
+          aria-label={`${project.title} 상세 보기`}
         >
           <Eye className="w-4 h-4 mr-2" />
           상세보기

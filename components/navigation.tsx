@@ -26,6 +26,15 @@ export function Navigation() {
       setIsScrolled(window.scrollY > 50);
 
       const sections = navItems.map((item) => item.href.slice(1));
+
+      const isBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 50;
+      if (isBottom) {
+        setActiveSection(sections[sections.length - 1]);
+        return;
+      }
+
       const scrollPosition = window.scrollY + 100;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -64,7 +73,7 @@ export function Navigation() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="cursor-pointer text-lg font-semibold text-primary hover:text-primary/80 transition-colors"
           >
-            Hahyun's portfolio
+            Hahyun&apos;s portfolio
           </button>
           <div className="hidden md:flex items-center gap-6">
             <ul className="flex items-center gap-6">
@@ -105,7 +114,6 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <div
         className={cn(
           "md:hidden overflow-hidden transition-all duration-300 bg-card/95 backdrop-blur-md border-b border-border/50",

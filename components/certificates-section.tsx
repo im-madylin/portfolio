@@ -17,7 +17,7 @@ export function CertificatesSection() {
         <ScrollAnimation animation="fade-up">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-2">자격증</h2>
-            <p className="text-muted-foreground">취득한 자격증입니다.</p>
+            <p className="text-muted-foreground">실무 역량을 검증하기 위해 취득한 자격증입니다.</p>
           </div>
         </ScrollAnimation>
         <div className={gridClassName}>

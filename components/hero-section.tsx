@@ -8,6 +8,10 @@ import { Mail, Github, Download } from "lucide-react"
 import { ScrollAnimation } from "./scroll-animation"
 
 export function HeroSection() {
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
   const prefixText = profileData.title
   const nameText = profileData.name
   const suffixText = "입니다"
@@ -26,9 +30,7 @@ export function HeroSection() {
   const [typedCount, setTypedCount] = useState(0)
 
   useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reducedMotion) {
-      setTypedCount(titleChars.length)
+    if (prefersReducedMotion) {
       return
     }
 
@@ -43,12 +45,13 @@ export function HeroSection() {
     }, 130)
 
     return () => window.clearInterval(timer)
-  }, [titleChars])
+  }, [prefersReducedMotion, titleChars.length])
 
-  const isTypingDone = typedCount >= titleChars.length
+  const resolvedTypedCount = prefersReducedMotion ? titleChars.length : typedCount
+  const isTypingDone = resolvedTypedCount >= titleChars.length
 
   const { typedPrefix, typedName, typedSuffix } = useMemo(() => {
-    let remaining = typedCount
+    let remaining = resolvedTypedCount
 
     const prefixLength = Math.min(remaining, prefixChars.length)
     const typedPrefixValue = prefixChars.slice(0, prefixLength).join("")
@@ -66,7 +69,7 @@ export function HeroSection() {
       typedName: typedNameValue,
       typedSuffix: typedSuffixValue,
     }
-  }, [typedCount, prefixChars, nameChars, suffixChars])
+  }, [resolvedTypedCount, prefixChars, nameChars, suffixChars])
 
   return (
     <section id="about" className="min-h-screen flex items-center justify-center pt-16">
@@ -76,7 +79,7 @@ export function HeroSection() {
             <div className="mb-6 inline-block hero-avatar-bounce">
               <div className="w-40 h-40 mx-auto rounded-full overflow-hidden shadow-lg ring-4 ring-primary/20">
                 <Image
-                  src="/placeholder-user.jpg"
+                  src="/profile-photo.png"
                   alt={profileData.name}
                   width={160}
                   height={160}
@@ -102,7 +105,7 @@ export function HeroSection() {
             </h1>
           </ScrollAnimation>
           <ScrollAnimation animation="fade-up" delay={300}>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8 text-pretty">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8 text-pretty whitespace-pre-line">
               {profileData.bio}
             </p>
           </ScrollAnimation>

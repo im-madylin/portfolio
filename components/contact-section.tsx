@@ -11,8 +11,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { profileData } from "@/lib/data";
 import { ScrollAnimation } from "./scroll-animation";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Mail, Send } from "lucide-react";
 
 const contactSchema = z.object({
   name: z.string().min(1, "이름을 입력해주세요."),
@@ -89,6 +90,14 @@ export function ContactSection() {
             <p className="text-muted-foreground">
               궁금한 점이 있으시다면 편하게 연락해 주세요.
             </p>
+            <div className="mt-4">
+              <Button asChild variant="outline" className="rounded-full">
+                <a href={`mailto:${profileData.email}`}>
+                  <Mail className="w-4 h-4 mr-2" />
+                  직접 메일 보내기
+                </a>
+              </Button>
+            </div>
           </div>
         </ScrollAnimation>
 
@@ -185,7 +194,7 @@ export function ContactSection() {
                   ) : (
                     <Send className="w-4 h-4 mr-2" />
                   )}
-                  {isSubmitting ? "전송 중..." : "등록하기"}
+                  {isSubmitting ? "전송 중..." : "보내기"}
                 </Button>
               </form>
             </CardContent>
