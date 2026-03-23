@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "generate:project-images": "node scripts/generate-project-images.mjs",
+    "predev": "npm run generate:project-images",
     "dev": "next dev",
+    "prebuild": "npm run generate:project-images",
     "build": "next build",
     "start": "next start",
+    "prelint": "npm run generate:project-images",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -61,10 +65,13 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@tailwindcss/postcss": "^4.2.0",
     "@types/node": "^22",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.1",
     "postcss": "^8.5",
     "shadcn": "^4.0.0",
     "tailwindcss": "^4.2.0",
