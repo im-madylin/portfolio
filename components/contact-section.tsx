@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -29,13 +29,32 @@ const contactSchema = z.object({
     .string()
     .min(1, "이메일을 입력해주세요.")
     .email("올바른 이메일 형식이 아닙니다."),
+  website: z.string().optional(),
   message: z.string().min(1, "내용을 입력해주세요."),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
+const EMAILJS_ENV_KEYS = [
+  "NEXT_PUBLIC_EMAILJS_SERVICE_ID",
+  "NEXT_PUBLIC_EMAILJS_TEMPLATE_ID",
+  "NEXT_PUBLIC_EMAILJS_PUBLIC_KEY",
+] as const;
+
+type EmailJsErrorLike = {
+  status?: number;
+  text?: string;
+};
+
+const isEmailJsErrorLike = (value: unknown): value is EmailJsErrorLike =>
+  typeof value === "object" && value !== null;
+
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+  const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+  const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
   const {
     register,
@@ -49,17 +68,54 @@ export function ContactSection() {
       company: "",
       phone: "",
       email: "",
+      website: "",
       message: "",
     },
   });
 
+  useEffect(() => {
+    if (!publicKey) return;
+
+    emailjs.init({
+      publicKey,
+      blockHeadless: true,
+      limitRate: {
+        id: "contact-form",
+        throttle: 15000,
+      },
+    });
+  }, [publicKey]);
+
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
 
+    const resolvedServiceId = serviceId;
+    const resolvedTemplateId = templateId;
+    const resolvedPublicKey = publicKey;
+
+    const missingEnvKeys = EMAILJS_ENV_KEYS.filter((key) => {
+      if (key === "NEXT_PUBLIC_EMAILJS_SERVICE_ID") return !resolvedServiceId;
+      if (key === "NEXT_PUBLIC_EMAILJS_TEMPLATE_ID") return !resolvedTemplateId;
+      return !resolvedPublicKey;
+    });
+
+    if (!resolvedServiceId || !resolvedTemplateId || !resolvedPublicKey) {
+      console.error("EmailJS env is missing", { missingEnvKeys });
+      toast.error("메일 전송 설정이 누락되었습니다. 관리자에게 문의해 주세요.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (data.website && data.website.trim().length > 0) {
+      toast.error("전송에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        resolvedServiceId,
+        resolvedTemplateId,
         {
           name: data.name,
           company: data.company,
@@ -67,13 +123,38 @@ export function ContactSection() {
           email: data.email,
           message: data.message,
         },
-        { publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! },
+        { publicKey: resolvedPublicKey },
       );
 
       toast.success("문의가 성공적으로 전송되었습니다.");
       reset();
-    } catch {
-      toast.error("전송에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    } catch (error) {
+      const errorText = isEmailJsErrorLike(error) && typeof error.text === "string"
+        ? error.text.toLowerCase()
+        : error instanceof Error
+          ? error.message.toLowerCase()
+          : "";
+      const errorStatus = isEmailJsErrorLike(error) && typeof error.status === "number"
+        ? error.status
+        : null;
+
+      console.error("EmailJS send failed", {
+        errorStatus,
+        errorText,
+        error,
+      });
+
+      if (
+        errorText.includes("public key") ||
+        errorText.includes("service") ||
+        errorText.includes("template")
+      ) {
+        toast.error("메일 전송 설정값이 올바르지 않습니다. 관리자에게 문의해 주세요.");
+      } else if (errorText.includes("origin") || errorText.includes("domain")) {
+        toast.error("배포 도메인이 EmailJS 허용 도메인에 등록되지 않았습니다.");
+      } else {
+        toast.error("전송에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -182,6 +263,16 @@ export function ContactSection() {
                       {errors.message.message}
                     </p>
                   )}
+                </div>
+
+                <div className="hidden" aria-hidden="true">
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    {...register("website")}
+                  />
                 </div>
 
                 <Button
